@@ -923,27 +923,6 @@ public class RDFImportTest {
   }
 
   @Test
-  public void testStreamFromBadUriFile() throws Exception {
-    try (Driver driver = GraphDatabase.driver(neo4j.boltURI(),
-        Config.build().withEncryptionLevel(Config.EncryptionLevel.NONE).toConfig())) {
-
-      Session session = driver.session();
-      createIndices(neo4j.getGraphDatabaseService());
-
-      StatementResult importResults1 = session.run("CALL semantics.streamRDF('" +
-          RDFImportTest.class.getClassLoader().getResource("badUri.ttl")
-              .toURI() + "','Turtle',{verifyUriSyntax: false})");
-      Map<String, Object> next = importResults1.next().asMap();
-      assertEquals("http://example.org/vocab/show/ent", next.get("subject"));
-      assertEquals("http://example.org/vocab/show/P854", next.get("predicate"));
-      assertEquals(
-          "https://suasprod.noc-science.at/XLCubedWeb/WebForm/ShowReport.aspx?rep=004+studierende%2f001+universit%25u00e4",
-          next.get("object"));
-      assertEquals(false, next.get("isLiteral"));
-    }
-  }
-
-  @Test
   public void testStreamFromBadUriFileFail() throws Exception {
     try (Driver driver = GraphDatabase.driver(neo4j.boltURI(),
         Config.build().withEncryptionLevel(Config.EncryptionLevel.NONE).toConfig())) {
